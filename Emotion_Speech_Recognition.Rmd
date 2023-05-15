@@ -1,0 +1,1073 @@
+---
+title: "Emotion Speech Recognition for Market Research"
+author: "Faisal Adhisthana Nugraha"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+          highlight: tango
+          toc: yes
+          toc_depth: 3
+          toc_float:
+            collapsed: yes
+          df_print: paged
+          number_sections: yes
+          css: bootstrap.css
+---
+
+<style>
+body {
+text-align: justify}
+</style>
+
+```{r setup, include=FALSE}
+# clear-up the environment
+rm(list = ls())
+
+# chunk options
+knitr::opts_chunk$set(
+  message = FALSE,
+  warning = FALSE,
+  fig.align = "center",
+  comment = "#>"
+)
+
+```
+
+
+```{r, out.width = "100%", echo = FALSE, fig.align = "center"}
+knitr::include_graphics("asset/process.jpg")
+```
+
+# Summary
+
+In market research, mendapatkan data hasil survey yang reliable dan terpercaya merupakan tantangan bagi surveyor. Hal ini menjadi tantangan dikarenakan hasil survey yang diperoleh bisa menjadi subjective or dishonest answer due to conflict of interest. This project started by audio data preprocessing, exploratory data analysis, feature extraction, modelling, model evaluation, and conclusion. This project can help various department ranging from marketing and market research departments, the customer service department, the Human Resources department, the recruitment and job interviews, and employee training and development. And, this project can be implemented in various industries as well as telecommunication, internet provider, banking or fintech, home & household appliance, customer service, human resources / outsourcing, travel & hotels, training & education, call center, etc.
+
+***
+
+# Preface
+
+## Background
+Communication is defined as the process of understanding and sharing meaning (Pearson & Nelson, 2000). In the certain business area, communication is a way to understand the interlocutor as well as customers, potential customers, conversation partner, vendor, etc. Especially in market research at marketing department, the company must be able to gather valuable information from customers as much as possible so that the company can grow exponentially by understanding the customers or potential customers needs & wants.  
+
+The company uses Value Preposition Canvas (VPC) framework to conduct product development so that the company can generate a new product which represent the customer's needs. This framework helps companies or entrepreneurs to solve problems and satisfy the needs of the customer by discovering the customer's pain through identifying the customer's jobs that need to be done. Therefore, to make a customer's job list the company requires to conduct qualitative research or quantitative research.   
+
+Using the company's resources and capabilities, the valuable informations can be used to conduct market research, campaign analysis, product development, process improvement, service improvement, customer satisfaction, product evaluation, service evaluation, customer behavior and so on. 
+
+***
+
+## Business Issue Exploration
+There are several informations that company can obtain or gather ranging from needs, wants, complain, review, feed back towards product, response towards new campaign, customer sentiment, etc. Mostly the company's data is taken from questionnaires, observation, interview, social media. Hence, there are two type of datas which taken from survey namely audio data and text data. 
+
+But the problem is the results of data collection is subjective or dishonest answer due to conflict of interest towards brand or surveyor. And it will impact to the company's ability to conduct market research also ability to understand the customers very well. Therefore, it will lead to misleading information, higher customer churn rate, miss communication, bad customer experience, and so on.
+
+***
+
+## Project Idea
+In order to minimize misleading information when the company is conducting market research, hence this project develops a classification model which can classify the emotion of a person towards a product, a service, or specific campaign. And the emotions that model classify is anger, happy, neutral, sad.  
+
+***
+
+## Problem Scope
+This project only processes the audio data set to classify human emotions. This project uses CREMA-D data set which is taken from https://github.com/CheyneyComputerScience/CREMA-D . CREMA-D is a data set of 7,442 original clips from 91 actors. These clips were from 48 male and 43 female actors between the ages of 20 and 74 coming from a variety of races and ethnicities (African America, Asian, Caucasian, Hispanic, and Unspecified). Actors spoke from a selection of 12 sentences. The sentences were presented using one of six different emotions (Anger, Disgust, Fear, Happy, Neutral, and Sad) and four different emotion levels (Low, Medium, High, and Unspecified). But, in order to make a prototype with the limited resources this project only proceed with four human emotions as target class and with small number of clips (1183 clips).
+
+The data set is an accordance with business need for this project due to:
+
+- The data set represents the diversity of human emotions.
+- The size of data set has a sufficiently large number of samples.
+- The data set of CREMA-D and Tess come up with metadata that provides additional information about expressed emotions, speaker identities, gender, and other relevant information for emotional speech recognition project.
+- These data sets also include variations in language and pronunciation accents, which can be valuable in building a more robust model in recognizing emotional speech from diverse linguistic backgrounds.
+
+
+***
+
+## Desired Output 
+The project output is a dashboard with classification model that can classify several emotions ranging from anger, happiness, sadness, and neutral in real time. Then, there are several features that dashborad provided as well as:
+
+- Human Emotion Classification Result for audio & video file input.
+- Human Emotion Classification Result in Real Time.
+- Results Time range for each human emotions result generated for real time and audio & video file input.
+- Face Emotion Recognition Result in Real TIme.
+
+***
+
+## Business Impact
+Therefore, by building emotion speech recognition project can help the company to grow, as follows:
+
+- In **marketing and market research departments**, emotional speech recognition can be used to analyze customer sentiments, feelings, and emotional responses. This model helps companies understand how customers emotionally respond towards a product, a service, or specific campaign and make decisions based on the analysis. The company can gather customer voice data through various channels, such as recorded customer service calls, one-on-one customer interview, focus group discussion recording, or voice recordings uploaded by customers in the form of testimonials or product reviews in social media.
+ 
+- In **the customer service department**, emotional speech recognition can be used to understand the emotions and feelings of customers during interactions with customer service agents. As a result, companies can respond better and provide appropriate solutions to enhance customer satisfaction, customer experience, and customer loyalty with strategic communication improvement.
+
+- In **the Human Resources department**, emotional speech recognition can be used to monitor and analyze employees’ emotional expressions during meetings, presentations, or team interactions. This information can help managers or HR teams to understand employees’ satisfaction levels, anxiety, or happiness so that the HR teams can take appropriate actions to improve their well-being.
+
+- In **the recruitment and job interviews**, emotional speech recognition can assist companies in analyzing the speech and emotional responses of candidates during job interviews. And, it can provide additional insights into their personality, interpersonal skills, and cultural fit with the company.
+
+- In **employee training and development**, emotional speech recognition can be used to provide real-time feedback and evaluation on how employees communicate emotionally. This can help to improve communication skills, emotional management, and interpersonal interactions, human resources / outsourcing.
+
+This project can be implemented in various industries as well as telecommunication, internet provider, banking or fintech, home & household appliance, customer service, human resources / outsourcing, travel & hotels, training & education, call center, etc.
+
+***
+
+## User Target & Benefits
+- **In marketing and market research departments**, emotional speech recognition can be used to analyze customer sentiments, feelings, and emotional responses towards products, services, or specific campaigns. This helps companies understand how customers emotionally respond and make decisions based on the analysis. The company can gather customer voice data through various channels, such as recorded customer service calls, interview or focus group discussion recording, or voice recordings uploaded by customers in the form of testimonials or product reviews.
+ 
+- **In the customer service department**, emotional speech recognition can be used to understand the emotions and feelings of customers during interactions with customer service agents. As a result, companies can respond better and provide appropriate solutions to enhance customer satisfaction, customer experience, and customer loyalty with strategic communication improvement.
+
+- **In the Human Resources department**, emotional speech recognition can be used to monitor and analyze employees’ emotional expressions during meetings, presentations, or team interactions. This information can help managers or HR teams to understand employees’ satisfaction levels, anxiety, or happiness so that the HR teams can take appropriate actions to improve their well-being.
+
+- **In the recruitment and job interviews**, emotional speech recognition can assist companies in analyzing the speech and emotional responses of candidates during job interviews. And, it can provide additional insights into their personality, intrapersonal skills, and cultural fit with the company.
+
+- **In employee training and development**, emotional speech recognition can be used to provide real-time feedback and evaluation on how employees communicate emotionally. This can help to improve communication skills, emotional management, and interpersonal interactions, human resources / outsourcing.
+
+***
+
+## Industry Implementation
+This project can be implemented in various industries as well as telecommunication, internet provider, banking or fintech, home & household appliance, customer service, human resources / outsourcing, travel & hotels, training & education, call center, etc.
+
+***
+
+# Library
+```{python}
+
+# base library
+import os
+import math
+
+# exploratory data
+import pandas as pd
+import numpy as np
+from collections import Counter
+# %matplotlib inline
+import matplotlib.pyplot as plt
+import librosa
+import librosa.display
+
+from IPython.display import display
+import IPython.display as ipd
+
+```
+
+
+***
+
+# Audio Data Preprocessing
+
+## Read Audio Files 
+```{python}
+path = 'data_input/'  
+
+# Fetches all filenames in the folder
+files = os.listdir(path)
+
+
+# Membuat dictionary untuk menyimpan kondisi sesuai dengan nama depan file
+conditions = {}
+for file in files:
+    name_parts = file.split('_')
+    name_1 = name_parts[0]
+    name_2 = name_parts[2]
+    name_3 = name_parts[3]
+    if name_1 == '1001':
+        conditions[file] = {'Age': 51, 'Sex': 'Male', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1002':
+        conditions[file] = {'Age': 21, 'Sex': 'Female', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1003':
+        conditions[file] = {'Age': 21, 'Sex': 'Female', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1004':
+        conditions[file] = {'Age': 42, 'Sex': 'Female', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1005':
+        conditions[file] = {'Age': 29, 'Sex': 'Male', 'Race': 'African_American', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1006':
+        conditions[file] = {'Age': 58, 'Sex': 'Female', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1007':
+        conditions[file] = {'Age': 38, 'Sex': 'Female', 'Race': 'African_American', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1008':
+        conditions[file] = {'Age': 46, 'Sex': 'Female', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1009':
+        conditions[file] = {'Age': 24, 'Sex': 'Female', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1010':
+        conditions[file] = {'Age': 27, 'Sex': 'Female', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1011':
+        conditions[file] = {'Age': 32, 'Sex': 'Male', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1012':
+        conditions[file] = {'Age': 23, 'Sex': 'Female', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1013':
+        conditions[file] = {'Age': 22, 'Sex': 'Female', 'Race': 'Caucasian', 'Ethnicity': 'Hispanic'}
+    elif name_1 == '1014':
+        conditions[file] = {'Age': 24, 'Sex': 'Male', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1015':
+        conditions[file] = {'Age': 32, 'Sex': 'Male', 'Race': 'African_American', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1016':
+        conditions[file] = {'Age': 61, 'Sex': 'Male', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1017':
+        conditions[file] = {'Age': 42, 'Sex': 'Male', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1018':
+        conditions[file] = {'Age': 25, 'Sex': 'Female', 'Race': 'Caucasian', 'Ethnicity': 'Hispanic'}
+    elif name_1 == '1019':
+        conditions[file] = {'Age': 29, 'Sex': 'Male', 'Race': 'Asian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1020':
+        conditions[file] = {'Age': 61, 'Sex': 'Female', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1021':
+        conditions[file] = {'Age': 30, 'Sex': 'Female', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1022':
+        conditions[file] = {'Age': 22, 'Sex': 'Male', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1023':
+        conditions[file] = {'Age': 22, 'Sex': 'Male', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1024':
+        conditions[file] = {'Age': 59, 'Sex': 'Female', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1025':
+        conditions[file] = {'Age': 48, 'Sex': 'Female', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1026':
+        conditions[file] = {'Age': 33, 'Sex': 'Male', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1027':
+        conditions[file] = {'Age': 44, 'Sex': 'Male', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1028':
+        conditions[file] = {'Age': 57, 'Sex': 'Female', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1029':
+        conditions[file] = {'Age': 33, 'Sex': 'Female', 'Race': 'African_American', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1030':
+        conditions[file] = {'Age': 42, 'Sex': 'Female', 'Race': 'African_American', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1031':
+        conditions[file] = {'Age': 31, 'Sex': 'Male', 'Race': 'Caucasian', 'Ethnicity': 'Hispanic'}
+    elif name_1 == '1032':
+        conditions[file] = {'Age': 30, 'Sex': 'Male', 'Race': 'African_American', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1033':
+        conditions[file] = {'Age': 31, 'Sex': 'Male', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1034':
+        conditions[file] = {'Age': 74, 'Sex': 'Male', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1035':
+        conditions[file] = {'Age': 48, 'Sex': 'Male', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1036':
+        conditions[file] = {'Age': 49, 'Sex': 'Male', 'Race': 'African_American', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1037':
+        conditions[file] = {'Age': 45, 'Sex': 'Female', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1038':
+        conditions[file] = {'Age': 21, 'Sex': 'Male', 'Race': 'African_American', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1039':
+        conditions[file] = {'Age': 51, 'Sex': 'Male', 'Race': 'African_American', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1040':
+        conditions[file] = {'Age': 42, 'Sex': 'Male', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1041':
+        conditions[file] = {'Age': 42, 'Sex': 'Male', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1042':
+        conditions[file] = {'Age': 37, 'Sex': 'Male', 'Race': 'African_American', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1043':
+        conditions[file] = {'Age': 25, 'Sex': 'Female', 'Race': 'Caucasian', 'Ethnicity': 'Hispanic'}
+    elif name_1 == '1044':
+        conditions[file] = {'Age': 40, 'Sex': 'Male', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1045':
+        conditions[file] = {'Age': 22, 'Sex': 'Male', 'Race': 'Asian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1046':
+        conditions[file] = {'Age': 22, 'Sex': 'Female', 'Race': 'Caucasian', 'Ethnicity': 'Hispanic'}
+    elif name_1 == '1047':
+        conditions[file] = {'Age': 22, 'Sex': 'Female', 'Race': 'Unknown', 'Ethnicity': 'Hispanic'}
+    elif name_1 == '1048':
+        conditions[file] = {'Age': 38, 'Sex': 'Male', 'Race': 'Caucasian', 'Ethnicity': 'Hispanic'}
+    elif name_1 == '1049':
+        conditions[file] = {'Age': 25, 'Sex': 'Female', 'Race': 'Caucasian', 'Ethnicity': 'Hispanic'}
+    elif name_1 == '1050':
+        conditions[file] = {'Age': 62, 'Sex': 'Male', 'Race': 'African_American', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1051':
+        conditions[file] = {'Age': 56, 'Sex': 'Male', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1052':
+        conditions[file] = {'Age': 33, 'Sex': 'Female', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1053':
+        conditions[file] = {'Age': 35, 'Sex': 'Female', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1054':
+        conditions[file] = {'Age': 36, 'Sex': 'Female', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1055':
+        conditions[file] = {'Age': 57, 'Sex': 'Female', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1056':
+        conditions[file] = {'Age': 52, 'Sex': 'Female', 'Race': 'African_American', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1057':
+        conditions[file] = {'Age': 25, 'Sex': 'Male', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1058':
+        conditions[file] = {'Age': 36, 'Sex': 'Female', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1059':
+        conditions[file] = {'Age': 21, 'Sex': 'Male', 'Race': 'African_American', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1060':
+        conditions[file] = {'Age': 28, 'Sex': 'Female', 'Race': 'African_American', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1061':
+        conditions[file] = {'Age': 51, 'Sex': 'Female', 'Race': 'African_American', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1062':
+        conditions[file] = {'Age': 56, 'Sex': 'Male', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1063':
+        conditions[file] = {'Age': 33, 'Sex': 'Female', 'Race': 'African_American', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1064':
+        conditions[file] = {'Age': 53, 'Sex': 'Male', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1065':
+        conditions[file] = {'Age': 38, 'Sex': 'Male', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1066':
+        conditions[file] = {'Age': 25, 'Sex': 'Male', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1067':
+        conditions[file] = {'Age': 66, 'Sex': 'Male', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1068':
+        conditions[file] = {'Age': 34, 'Sex': 'Male', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1069':
+        conditions[file] = {'Age': 27, 'Sex': 'Male', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1070':
+        conditions[file] = {'Age': 25, 'Sex': 'Male', 'Race': 'African_American', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1071':
+        conditions[file] = {'Age': 41, 'Sex': 'Male', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1072':
+        conditions[file] = {'Age': 33, 'Sex': 'Female', 'Race': 'Asian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1073':
+        conditions[file] = {'Age': 24, 'Sex': 'Female', 'Race': 'African_American', 'Ethnicity': 'Hispanic'}
+    elif name_1 == '1074':
+        conditions[file] = {'Age': 31, 'Sex': 'Female', 'Race': 'African_American', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1075':
+        conditions[file] = {'Age': 40, 'Sex': 'Female', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1076':
+        conditions[file] = {'Age': 25, 'Sex': 'Female', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1077':
+        conditions[file] = {'Age': 20, 'Sex': 'Male', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1078':
+        conditions[file] = {'Age': 21, 'Sex': 'Female', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1079':
+        conditions[file] = {'Age': 21, 'Sex': 'Female', 'Race': 'Caucasian', 'Ethnicity': 'Hispanic'}
+    elif name_1 == '1080':
+        conditions[file] = {'Age': 21, 'Sex': 'Male', 'Race': 'African_American', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1081':
+        conditions[file] = {'Age': 30, 'Sex': 'Male', 'Race': 'Asian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1082':
+        conditions[file] = {'Age': 20, 'Sex': 'Female', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1083':
+        conditions[file] = {'Age': 45, 'Sex': 'Male', 'Race': 'African_American', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1084':
+        conditions[file] = {'Age': 46, 'Sex': 'Female', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1085':
+        conditions[file] = {'Age': 34, 'Sex': 'Male', 'Race': 'Asian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1086':
+        conditions[file] = {'Age': 33, 'Sex': 'Male', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1087':
+        conditions[file] = {'Age': 62, 'Sex': 'Male', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1088':
+        conditions[file] = {'Age': 23, 'Sex': 'Male', 'Race': 'African_American', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1089':
+        conditions[file] = {'Age': 24, 'Sex': 'Female', 'Race': 'Caucasian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1090':
+        conditions[file] = {'Age': 50, 'Sex': 'Male', 'Race': 'Asian', 'Ethnicity': 'Not_Hispanic'}
+    elif name_1 == '1091':
+        conditions[file] = {'Age': 29, 'Sex': 'Female', 'Race': 'Asian', 'Ethnicity': 'Not_Hispanic'}
+      
+    if name_2 == 'ANG':
+        Level = 'Anger'
+    elif name_2 == 'HP':
+        Level = 'Happiness'
+    elif name_2 == 'SAD':
+        Level = 'Sadness'
+    else:
+        Level = 'Neutral'
+        
+    if name_3 == 'HI':
+        Level = 'High'
+    elif name_3 == 'MD':
+        Level = 'Mid'
+    elif name_3 == 'LO':
+        Level = 'Low'
+    else:
+        Level = 'Unspecified'
+
+# Konversi dictionary menjadi dataframe
+df = pd.DataFrame.from_dict(conditions, orient='index')
+```
+
+```{python}
+audio = df.reset_index()
+audio.columns = ['File_Name','Age','Sex','Race','Ethnicity']
+
+
+# Sort by filename index-0, index-2, and index-3
+audio = audio.sort_values(by=['File_Name'])
+
+# Create a new column from splitting the File_Name column for sort value matter
+audio[['col0', 'col2', 'col3']] = audio['File_Name'].str.split('_', expand=True)[[0, 2, 3]]
+audio = audio.sort_values(by=['col0', 'col2', 'col3'])
+
+audio
+
+```
+```{python}
+# Drop unnecessary columns
+audio = audio.drop(columns=['File_Name', 'col0'])
+
+# Create a new column from splitting the col3 column to get Emotion & Emotion Level
+audio[['Emotion_Lvl','Format']]=audio['col3'].str.split('.',expand=True)[[0,1]]
+
+# Drop unnecessary columns
+audio = audio.drop(columns=['col3','Format'])
+
+# Rename col2 column
+audio.rename(columns = {'col2' : 'Emotion'}, inplace = True)
+
+# Reset Index
+audio = audio.reset_index()
+audio = audio.drop(columns=['index'])
+audio
+```
+
+***
+
+## Change The Data Types
+
+```{python}
+audio.info()
+```
+
+```{python}
+# Change to category data type
+audio[['Sex','Race','Ethnicity','Emotion','Emotion_Lvl']] = audio[['Sex','Race','Ethnicity','Emotion','Emotion_Lvl']].astype('category')
+audio.info()
+```
+
+***
+
+## Data Description
+```{python}
+audio.nunique()
+```
+
+**Insight:**
+
+The `nunique()` function result above shows that the Age column has 38 unique values, Sex column has 2 unique values, Race column has 4 unique values, Ethnicity column has 2 unique values, Emotion column has 4 unique values,and Emotion_Lvl column has 4 unique values.
+
+- **Age**
+
+```{python}
+audio['Age'].unique()
+```
+
+```{python}
+age=pd.crosstab(index=audio['Age'],
+           columns='Total')
+age.sort_values(by=['Total'],ascending=False).T
+```
+
+**Insight:**
+
+- The `unique()` function result above shows that the minimun age is 20 and maximum age is 74. 
+- The `crosstab()` function result above shows that the 21 and 25 years old took the first and second positions with a total of 91, then the 22 and 33 years old took the second and third positions with a total of 78. And last position is people with 58 year old.
+
+- **Sex**
+
+```{python}
+audio['Sex'].unique()
+```
+
+```{python}
+sex=pd.crosstab(index=audio['Sex'],
+           columns='Total')
+sex.sort_values(by=['Total'],ascending=False).plot(kind='bar',rot=0)
+```
+
+**Insight:**
+
+- The `unique()` function result above shows that the Sex column has two values which are Male and Female.
+- The Male is higher than Female with a total of 625. 
+- The Female has a total of 558.
+
+- **Race**
+
+```{python}
+audio['Race'].unique()
+```
+
+```{python}
+race=pd.crosstab(index=audio['Race'],
+           columns='Total')
+
+race.sort_values(by=['Total'],ascending=False).plot(kind='bar',rot=0)
+```
+
+**Insight:**
+
+- The `unique()` function result above shows that the Race column consist of Caucasian, African_American, Asian, and Unknown. 
+- The plot with `crosstab()` function result above shows that the Caucasian race is higher than others with the amount above 700. And the lowest positions are Asian race and Unknown race with the amount below 100.
+
+- **Ethnicity**
+
+```{python}
+audio['Ethnicity'].unique()
+```
+
+```{python}
+eth=pd.crosstab(index=audio['Ethnicity'],
+           columns='Total')
+eth.sort_values(by=['Total'],ascending=False).plot(kind='bar',rot=0)
+```
+
+**Insight:**
+
+- The `unique()` function result above shows that the Ethnicity column consist of Not_Hispanic and Hispanic.
+- Not_Hispanic Ethnicity has a total of 1053.
+- Hispanic Ethnicity has a total of 130.
+
+- **Emotion**
+
+```{python}
+audio['Emotion'].unique()
+```
+
+```{python}
+emo=pd.crosstab(index=audio['Emotion'],
+           columns='Total')
+emo.sort_values(by=['Total'],ascending=False).plot(kind='bar',rot=0)
+```
+
+**Insight:**
+
+- The `unique()` function result above shows that the Emotion column consist of ANG (Anger), HAP (Happiness), NEU (Neutral), and SAD (Sadness).
+- Several emotions ranging from anger, happiness, sadness which have a total amount of 364.
+- The neutral emotion has a total amount of 91.
+
+- **Emotion_Lvl**
+
+```{python}
+audio['Emotion_Lvl'].unique()
+```
+
+```{python}
+lvl=pd.crosstab(index=audio['Emotion_Lvl'],
+           columns='Total')
+lvl.sort_values(by=['Total'],ascending=False).plot(kind='bar',rot=0)
+```
+
+**Insight:**
+
+- The `unique()` function result above shows that there are four emotion levels which are HI (High), LO (Low), MD (Medium), and XX (Unspecified).
+- Several emotion levels ranging from High, Low, Medium which have a total amount of 273.
+- The unspecified emotion level has a total amount of 364.
+
+***
+
+## Extracting Data 
+
+### Amplitudo Envelope {.tabset}
+
+The amplitude envelope is a curve that represents the change in amplitude of an audio signal over time. This envelope provides information about the dynamics of the audio signal and can assist in the analysis and extraction of sound features that are useful in various applications such as speech recognition, music analysis, and other audio processing.
+
+#### Anger Audio
+
+```{python}
+# Display Anger with High Emotion Level Audio Player - 1001_IEO_ANG_HI.wav
+ipd.Audio("data_input/1001_IEO_ANG_HI.wav")
+```
+
+```{python}
+# Display Anger with Low Emotion Level Audio Player - 1088_IEO_ANG_LO.wav
+ipd.Audio("data_input/1088_IEO_ANG_LO.wav")
+```
+
+```{python}
+# Display Anger with Medium Emotion Level Audio Player - 1018_IEO_ANG_MD.wav
+ipd.Audio("data_input/1018_IEO_ANG_MD.wav")
+
+```
+
+```{python}
+# Display Anger with Unspecified Emotion Level Audio Player - 1019_MTI_ANG_XX.wav
+ipd.Audio("data_input/1019_MTI_ANG_XX.wav")
+```
+
+```{python}
+FIG_SIZE_L = (10,15)
+PATH_L = "data_input/"
+files =  ["1001_IEO_ANG_HI.wav", "1088_IEO_ANG_LO.wav", "1018_IEO_ANG_MD.wav", "1019_MTI_ANG_XX.wav"]
+
+for item in files:
+    FILE_PATH_L = PATH_L + item
+    # load audio file with Librosa
+    signal, sample_rate = librosa.load(FILE_PATH_L, sr=44100)
+    
+    # display waveform
+    plt.figure(figsize=(12, 4))
+    librosa.display.waveshow(signal, sr=sample_rate, alpha=0.4)
+    plt.xlabel("Time (s)")
+    plt.ylabel("Amplitude")
+    plt.yticks(np.arange(-1, 1.25, 0.5))
+    plt.title(f"Waveform ({'_'.join(item.split(sep='_')[2:4]).replace('.wav','')})")
+    plt.show()
+```
+
+
+
+***
+
+#### Happiness Audio
+
+```{python}
+# Display Happiness with High Emotion Level Audio Player - 1090_IEO_HAP_HI.wav
+ipd.Audio("data_input/1090_IEO_HAP_HI.wav")
+```
+
+```{python}
+# Display Happiness with Low Emotion Level Audio Player - 1065_IEO_HAP_LO.wav
+ipd.Audio("data_input/1065_IEO_HAP_LO.wav")
+```
+
+```{python}
+# Display Happiness with Medium Emotion Level Audio Player - 1044_IEO_HAP_MD.wav
+ipd.Audio("data_input/1044_IEO_HAP_MD.wav")
+
+```
+
+```{python}
+# Display Happiness with Unspecified Emotion Level Audio Player - 1029_IWL_HAP_XX.wav
+ipd.Audio("data_input/1029_IWL_HAP_XX.wav")
+```
+
+
+```{python}
+FIG_SIZE_H = (10,15)
+PATH_H = "data_input/"
+files_H =  ["1090_IEO_HAP_HI.wav", "1065_IEO_HAP_LO.wav", "1044_IEO_HAP_MD.wav", "1029_IWL_HAP_XX.wav"]
+
+for item in files_H:
+    FILE_PATH_H = PATH_H + item
+    # load audio file with Librosa
+    signal, sample_rate = librosa.load(FILE_PATH_H, sr=44100)
+    
+    # display waveform
+    plt.figure(figsize=(12, 4))
+    librosa.display.waveshow(signal, sr=sample_rate, alpha=0.4)
+    plt.xlabel("Time (s)")
+    plt.ylabel("Amplitude")
+    plt.yticks(np.arange(-1, 1.25, 0.5))
+    plt.title(f"Waveform ({'_'.join(item.split(sep='_')[2:4]).replace('.wav','')})")
+    plt.show()
+```
+
+
+
+***
+
+#### Sadness Audio
+
+```{python}
+# Display Sadness with High Emotion Level Audio Player - 1054_IEO_SAD_HI.wav
+ipd.Audio("data_input/1054_IEO_SAD_HI.wav")
+```
+
+```{python}
+# Display Sadness with Low Emotion Level Audio Player - 1055_IEO_SAD_LO.wav
+ipd.Audio("data_input/1055_IEO_SAD_LO.wav")
+```
+
+```{python}
+# Display Sadness with Medium Emotion Level Audio Player - 1043_IEO_SAD_MD.wav
+ipd.Audio("data_input/1043_IEO_SAD_MD.wav")
+
+```
+
+```{python}
+# Display Sadness with Unspecified Emotion Level Audio Player - 1035_IOM_SAD_XX.wav
+ipd.Audio("data_input/1035_IOM_SAD_XX.wav")
+```
+
+```{python}
+FIG_SIZE_S = (10,15)
+PATH_S = "data_input/"
+files_S =  ["1054_IEO_SAD_HI.wav", "1055_IEO_SAD_LO.wav", "1043_IEO_SAD_MD.wav", "1035_IOM_SAD_XX.wav"]
+
+for item in files_S:
+    FILE_PATH_S = PATH_S + item
+    # load audio file with Librosa
+    signal, sample_rate = librosa.load(FILE_PATH_S, sr=44100)
+    
+    # display waveform
+    plt.figure(figsize=(12, 4))
+    librosa.display.waveshow(signal, sr=sample_rate, alpha=0.4)
+    plt.xlabel("Time (s)")
+    plt.ylabel("Amplitude")
+    plt.yticks(np.arange(-1, 1.25, 0.5))
+    plt.title(f"Waveform ({'_'.join(item.split(sep='_')[2:4]).replace('.wav','')})")
+    plt.show()
+```
+
+
+
+***
+
+#### Neutral Audio
+
+```{python}
+# Display Neutral with Unspecified Emotion Level Audio Player - 1091_IWW_NEU_XX.wav
+ipd.Audio("data_input/1091_IWW_NEU_XX.wav")
+```
+
+```{python}
+# Display Neutral with Unspecified Emotion Level Audio Player - 1050_IWW_NEU_XX.wav
+ipd.Audio("data_input/1050_IWW_NEU_XX.wav")
+```
+
+```{python}
+# Display Neutral with Unspecified Emotion Level Audio Player - 1017_IWW_NEU_XX.wav
+ipd.Audio("data_input/1017_IWW_NEU_XX.wav")
+
+```
+
+```{python}
+# Display Neutral with Unspecified Emotion Level Audio Player - 1001_IWW_NEU_XX.wav
+ipd.Audio("data_input/1001_IWW_NEU_XX.wav")
+```
+
+```{python}
+FIG_SIZE_N = (10,15)
+PATH_N = "data_input/"
+files_N =  ["1091_IWW_NEU_XX.wav", "1050_IWW_NEU_XX.wav", "1017_IWW_NEU_XX.wav", "1001_IWW_NEU_XX.wav"]
+
+for item in files_N:
+    FILE_PATH_N = PATH_N + item
+    # load audio file with Librosa
+    signal, sample_rate = librosa.load(FILE_PATH_N, sr=44100)
+    
+    # display waveform
+    plt.figure(figsize=(12, 4))
+    librosa.display.waveshow(signal, sr=sample_rate, alpha=0.4)
+    plt.xlabel("Time (s)")
+    plt.ylabel("Amplitude")
+    plt.yticks(np.arange(-1, 1.25, 0.5))
+    plt.title(f"Waveform ({'_'.join(item.split(sep='_')[2:4]).replace('.wav','')})")
+    plt.show()
+```
+
+
+
+***
+
+
+# EDA - Feature Extraction
+
+## PROSODIC {.tabset}
+
+### Pitch
+Pitch is a phenomenon that occurs when sound is produced by vibrations on the vocal cords in the larynx and the frequency of these vibrations is converted into sound waves that can be heard by the human ear. Pitch can be measured in Hertz (Hz) and describes the high or low tone of the produced sound. Pitch can also be used to distinguish different sounds such as in human speech, thus providing information about emotions, intonation, and even the speaker's identity.
+
+Pitch in voice can indicate the intensity of emotion perceived by the speaker. High pitch can indicate excitement or anxiety, while low pitch can indicate boredom or depression.
+
+```{python}
+# Define directory path and initialize empty dataframe
+dir_path = 'data_input/'
+df_pitch = pd.DataFrame(columns=['filename', 'pitch_mean', 'pitch_std', 'pitch_min', 'pitch_max'])
+
+# Loop through each file in the directory
+for filename in os.listdir(dir_path):
+    # Check if file name starts with a number between 1001 and 1091
+    if filename.startswith(tuple([str(i) for i in range(1001, 1092)])):
+        # Extract the number from the file name
+        number = int(filename.split('_')[0])
+        # Load audio file and extract pitch features
+        audio_file = os.path.join(dir_path, filename)
+        y, sr = librosa.load(audio_file, sr=44100)
+        pitches, magnitudes = librosa.piptrack(y=y, sr=sr)
+        pitch_mean = np.mean(pitches)
+        pitch_std = np.std(pitches)
+        pitch_min = np.min(pitches)
+        pitch_max = np.max(pitches)
+
+        # Append feature values to the dataframe
+        df_pitch = pd.concat([df_pitch, pd.DataFrame({
+            'filename': [filename],
+            'number': [number],
+            'pitch_mean': [pitch_mean],
+            'pitch_std': [pitch_std],
+            'pitch_min': [pitch_min],
+            'pitch_max': [pitch_max]
+        })], ignore_index=True)
+
+# Assign the dataframe to a variable
+pitch_features = df_pitch
+
+
+# Sort by filename index ke-0, ke-2, dan ke-3
+pitch_features = pitch_features.sort_values(by=['filename'])
+pitch_features[['col0', 'col2', 'col3']] = pitch_features['filename'].str.split('_', expand=True)[[0, 2, 3]]
+pitch_features = pitch_features.sort_values(by=['col0', 'col2', 'col3'])
+
+# Drop unnecessary columns
+pitch_features = pitch_features.drop(columns=['col0', 'col2', 'col3'])
+
+pitch_features = pitch_features.reset_index(drop=True)
+pitch_features=pitch_features.drop(['number'],axis=1)
+pitch_features.head(26)
+
+
+
+```
+
+***
+
+### Energy
+The short time energy of the speech signal provides a convenient representation that reflects the amplitude variation. The short-time energy of speech signals reflects the amplitude variation. In a typical speech signal we can see that its certain properties considerably changes with time.
+
+```{python}
+
+
+# Audio Anger Emotion with High Level
+audio_data="data_input/1091_IEO_ANG_HI.wav"
+y, sr = librosa.load(audio_data)
+
+S, phase = librosa.magphase(librosa.stft(y))
+rms = librosa.feature.rms(S=S)
+
+fig, ax = plt.subplots(figsize=(15, 6), nrows=2, sharex=True)
+times = librosa.times_like(rms)
+ax[0].semilogy(times, rms[0], label='RMS Energy')
+ax[0].set(xticks=[])
+ax[0].legend()
+ax[0].label_outer()
+librosa.display.specshow(librosa.amplitude_to_db(S, ref=np.max),
+                         y_axis='log', x_axis='time', ax=ax[1])
+ax[1].set(title='log Power spectrogram')
+
+```
+
+
+
+
+
+
+
+
+
+
+
+```{python}
+# Set directory path and initialize empty list
+dir_path = 'data_input/'
+file_list = []
+
+# Loop through each file in the directory
+for filename in os.listdir(dir_path):
+    # Check if file name has 4 parts separated by underscores
+    if len(filename.split('_')) < 4:
+        # Append the file name to the list
+        file_list.append(filename)
+
+# Sort the list alphabetically
+file_list.sort()
+
+# Initialize an empty dictionary to store RMS energy values for each file
+rms_dict = {}
+
+# Loop through each file in the list
+for filename in file_list:
+    # Load audio file and extract RMS energy
+    audio_file = os.path.join(dir_path, filename)
+    y, sr = librosa.load(audio_file, sr=44100)
+    S, phase = librosa.magphase(librosa.stft(y))
+    rms = librosa.feature.rms(S=S)
+    rms_dict[filename] = rms
+
+# Plot the RMS energy for each file
+fig, axs = plt.subplots(nrows=2, ncols=2, figsize=(15, 6), sharex=True)
+for i, filename in enumerate(file_list):
+    row = i // 2
+    col = i % 2
+    rms = rms_dict[filename]
+    times = librosa.times_like(rms)
+    axs[row, col].semilogy(times, rms[0], label='RMS Energy')
+    axs[row, col].set(xticks=[])
+    axs[row, col].legend()
+    axs[row, col].label_outer()
+    axs[row, col].set(title='RMSE Energy for {}'.format(filename))
+
+# Show the plot
+plt.show()
+```
+
+```{python}
+dir_path = 'data_input/'
+
+# Loop through each file in the directory
+for filename in os.listdir(dir_path):
+    # Check if file name has at least 3 underscore-separated components
+    if len(filename.split('_')) < 4:
+        continue
+    
+    # Check if file name has a valid format
+    if not filename.endswith('.wav'):
+        continue
+    
+    # Load audio file and extract RMS features
+    audio_file = os.path.join(dir_path, filename)
+    y, sr = librosa.load(audio_file, sr=44100)
+    S, phase = librosa.magphase(librosa.stft(y))
+    rms = librosa.feature.rms(S=S)
+    
+    # Plot the RMS energy
+    fig, ax = plt.subplots(figsize=(15, 6))
+    times = librosa.times_like(rms)
+    ax.semilogy(times, rms[0], label='RMS Energy')
+    ax.set(title=f"RMS Energy for {filename}")
+    ax.set(xlabel='Time (s)', ylabel='RMS Energy')
+    ax.legend()
+    
+plt.show()
+```
+
+```{python}
+dir_path = 'data_input/'
+
+# Create dictionary to store RMS features for each category
+rms_dict = {'cat1': [], 'cat2': [], 'cat3': [], 'cat4': []}
+
+# Loop through each file in the directory
+for filename in os.listdir(dir_path):
+    # Check if file name has at least 3 underscore-separated components
+    if len(filename.split('_')) < 4:
+        continue
+    
+    # Check if file name has a valid format
+    if not filename.endswith('.wav'):
+        continue
+    
+    # Determine the category of the file based on index 2 in the file name
+    file_category = filename.split('_')[2]
+    
+    # Load audio file and extract RMS features
+    audio_file = os.path.join(dir_path, filename)
+    y, sr = librosa.load(audio_file, sr=44100)
+    S, phase = librosa.magphase(librosa.stft(y))
+    rms = librosa.feature.rms(S=S)
+    
+    # Add RMS features to the dictionary based on the file category
+    rms_dict[file_category].append(rms[0])
+    
+# Plot the RMS energy for each category
+fig, axs = plt.subplots(nrows=4, figsize=(15, 24), sharex=True, sharey=True)
+times = librosa.times_like(rms)
+for i, (category, rms_list) in enumerate(rms_dict.items()):
+    ax = axs[i]
+    ax.set(title=f"RMS Energy for Category {category}")
+    ax.set(xlabel='Time (s)', ylabel='RMS Energy')
+    for rms in rms_list:
+        ax.semilogy(times, rms)
+    ax.legend()
+    
+plt.show()
+
+```
+
+```{python}
+
+dir_path = 'data_input/'
+
+# Create a dictionary to store RMS energy data for each category
+categories = {}
+
+# Loop through each file in the directory
+for filename in os.listdir(dir_path):
+    # Check if file name has at least 3 underscore-separated components
+    if len(filename.split('_')) < 3:
+        continue
+    
+    # Extract the category from the file name
+    category = filename.split('_')[2]
+    
+    # Check if file name has a valid format
+    if not filename.endswith('.wav'):
+        continue
+    
+    # Load audio file and extract RMS features
+    audio_file = os.path.join(dir_path, filename)
+    y, sr = librosa.load(audio_file, sr=44100)
+    S, phase = librosa.magphase(librosa.stft(y))
+    rms = librosa.feature.rms(S=S)
+    
+    # Add RMS energy data to the category dictionary
+    if category in categories:
+        categories[category].append(rms[0])
+    else:
+        categories[category] = [rms[0]]
+    
+# Plot the RMS energy for each category
+fig, axes = plt.subplots(len(categories), figsize=(20, 6*len(categories)), sharex=True)
+for i, category in enumerate(categories):
+    ax = axes[i] if len(categories) > 1 else axes
+    times = librosa.times_like(categories[category][0])
+    for rms_data in categories[category]:
+        ax.semilogy(times, rms_data, label='RMS Energy')
+    ax.set(title=f"RMS Energy for {category}")
+    ax.set(xlabel='Time (s)', ylabel='RMS Energy')
+    ax.legend()
+    
+plt.show()
+
+```
+
+
+```{python}
+dir_path = 'data_input/'
+
+# Create a dictionary to store RMS energy data for each category
+categories = {}
+
+# Loop through each file in the directory
+for filename in os.listdir(dir_path):
+    # Check if file name has at least 3 underscore-separated components
+    if len(filename.split('_')) < 3:
+        continue
+    
+    # Extract the category from the file name
+    category = filename.split('_')[2]
+    
+    # Check if file name has a valid format
+    if not filename.endswith('.wav'):
+        continue
+    
+    # Load audio file and extract RMS features
+    audio_file = os.path.join(dir_path, filename)
+    y, sr = librosa.load(audio_file, sr=44100)
+    S, phase = librosa.magphase(librosa.stft(y))
+    rms = librosa.feature.rms(S=S)
+    
+    # Add RMS energy data to the category dictionary
+    if category in categories:
+        categories[category].append(rms[0])
+    else:
+        categories[category] = [rms[0]]
+    
+# Plot the RMS energy for each category
+fig, axes = plt.subplots(len(categories), figsize=(20, 6*len(categories)), sharex=True)
+for i, category in enumerate(categories):
+    ax = axes[i] if len(categories) > 1 else axes
+    times = librosa.times_like(categories[category][0])
+    for rms_data in categories[category]:
+        ax.semilogy(times, rms_data, label='RMS Energy', xoffset=0.0, yoffset=1.0, offset=-6)
+    ax.set(title=f"RMS Energy for {category}")
+    ax.set(xlabel='Time (s)', ylabel='RMS Energy')
+    ax.legend()
+    ax.get_legend().get_texts()[0].set_x(10)
+    
+plt.show()
+
+```
+
+
+
+
+***
+
+
+```{python}
+
+```
+
+
+# References
+
+1. Pearson, J., & Nelson, P. (2000). An introduction to human communication: Understanding and sharing (p. 6). Boston, MA: McGraw-Hill. In certain business area, communication 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
